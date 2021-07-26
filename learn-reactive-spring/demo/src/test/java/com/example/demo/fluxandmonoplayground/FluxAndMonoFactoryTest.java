@@ -18,4 +18,23 @@ public class FluxAndMonoFactoryTest {
                 .expectNext("dog", "cat", "bird")
                 .verifyComplete();
     }
+
+    @Test
+    public void fluxUsingArrayTest() {
+        String[] animals = new String[]{"dog", "cat", "bird"};
+        Flux<String> stringFlux = Flux.fromArray(animals).log();
+
+        StepVerifier.create(stringFlux)
+                .expectNext("dog", "cat", "bird")
+                .verifyComplete();
+    }
+
+    @Test
+    public void fluxUsingStreamsTest() {
+        Flux<String> stringFlux = Flux.fromStream(animals.parallelStream()).log();
+
+        StepVerifier.create(stringFlux)
+                .expectNext("dog", "cat", "bird")
+                .verifyComplete();
+    }
 }
