@@ -43,6 +43,16 @@ public class FluxAndMonoFactoryTest {
     }
 
     @Test
+    public void fluxUsingRangeTest() {
+        Flux<Integer> integerFlux = Flux.range(1, 5);
+
+        StepVerifier.create(integerFlux)
+                .expectNext(1,2,3,4,5)
+                .verifyComplete();
+
+    }
+
+    @Test
     public void monoUsingJustOrEmpty() {
         Mono<String> stringMono = Mono.justOrEmpty(Optional.empty());
         StepVerifier.create(stringMono)
