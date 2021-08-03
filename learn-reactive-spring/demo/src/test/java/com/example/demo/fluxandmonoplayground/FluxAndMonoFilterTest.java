@@ -20,4 +20,15 @@ public class FluxAndMonoFilterTest {
                 .expectNext("cat")
                 .verifyComplete();
     }
+
+    @Test
+    public void filterLengthTest() {
+        Flux<String> stringFlux = Flux.fromIterable(animals)
+                .filter(s -> s.length()> 2)
+                .log();
+
+        StepVerifier.create(stringFlux)
+                .expectNext("dog", "cat", "bird")
+                .verifyComplete();
+    }
 }
