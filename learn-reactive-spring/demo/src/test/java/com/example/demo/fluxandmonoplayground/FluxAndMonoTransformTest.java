@@ -22,4 +22,16 @@ public class FluxAndMonoTransformTest {
 
     }
 
+    @Test
+    public void transformUsingMapLengthTest() {
+
+        Flux<Integer> integerFlux = Flux.fromIterable(animals)
+                .map(String::length)
+                .log();
+
+        StepVerifier.create(integerFlux)
+                .expectNext(3, 3, 4)
+                .verifyComplete();
+    }
+
 }
