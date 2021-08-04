@@ -34,4 +34,17 @@ public class FluxAndMonoTransformTest {
                 .verifyComplete();
     }
 
+    @Test
+    public void transformUsingMapLengthRepeatTest() {
+
+        Flux<Integer> integerFlux = Flux.fromIterable(animals)
+                .map(String::length)
+                .repeat(1)
+                .log();
+
+        StepVerifier.create(integerFlux)
+                .expectNext(3, 3, 4)
+                .expectNext(3, 3, 4)
+                .verifyComplete();
+    }
 }
