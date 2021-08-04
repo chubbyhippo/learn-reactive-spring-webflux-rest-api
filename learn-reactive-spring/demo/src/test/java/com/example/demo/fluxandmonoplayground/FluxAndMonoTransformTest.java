@@ -47,4 +47,17 @@ public class FluxAndMonoTransformTest {
                 .expectNext(3, 3, 4)
                 .verifyComplete();
     }
+
+    @Test
+    public void transformUsingFilterMapTest() {
+
+        Flux<String> stringFlux = Flux.fromIterable(animals)
+                .filter(s -> s.length() > 3)
+                .map(String::toUpperCase)
+                .log();
+
+        StepVerifier.create(stringFlux)
+                .expectNext("BIRD")
+                .verifyComplete();
+    }
 }
