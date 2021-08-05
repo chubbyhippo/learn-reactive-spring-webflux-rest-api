@@ -2,6 +2,7 @@ package com.example.demo.fluxandmonoplayground;
 
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
@@ -80,5 +81,33 @@ public class FluxAndMonoTransformTest {
             e.printStackTrace();
         }
         return Arrays.asList(s, "newValue");
+    }
+
+    @Test
+    public void transformUsingFlatMapParallelTest() {
+        Flux<String> stringFlux = Flux.fromIterable(Arrays.asList("A", "B", "C", "D"))
+                .window(2)
+                .flatMap(s -> s.map(this::convertToList).subscribeOn(Schedulers.parallel()))
+                .flatMap(Flux::fromIterable)
+                .log();
+
+        StepVerifier.create(stringFlux)
+                .expectNextCount(8)
+                .verifyComplete();
+
+    }
+
+    @Test
+    public void transformUsingFlatMapParallelMaintainOrderTest() {
+        Flux<String> stringFlux = Flux.fromIterable(Arrays.asList("A", "B", "C", "D"))
+                .window(2)
+                .concatMap(s -> s.map(this::convertToList).subscribeOn(Schedulers.parallel()))
+                .flatMap(Flux::fromIterable)
+                .log();
+
+        StepVerifier.create(stringFlux)
+                .expectNext("A", "newValue", "B", "newValue", "C", "newValue", "D", "newValue")
+                .verifyComplete();
+
     }
 }
