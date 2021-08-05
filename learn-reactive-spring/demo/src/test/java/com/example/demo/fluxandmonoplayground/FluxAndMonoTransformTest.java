@@ -60,4 +60,25 @@ public class FluxAndMonoTransformTest {
                 .expectNext("BIRD")
                 .verifyComplete();
     }
+
+    @Test
+    public void transformUsingFlatMapTest() {
+        Flux<String> stringFlux = Flux.fromIterable(Arrays.asList("A", "B", "C", "D"))
+                .flatMap(s -> Flux.fromIterable(convertToList(s)))
+                .log();
+
+        StepVerifier.create(stringFlux)
+                .expectNextCount(8)
+                .verifyComplete();
+
+    }
+
+    private List<String> convertToList(String s) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return Arrays.asList(s, "newValue");
+    }
 }
