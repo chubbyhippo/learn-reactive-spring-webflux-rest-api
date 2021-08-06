@@ -53,4 +53,19 @@ public class FluxAndMonoCombineTest {
 
 
     }
+
+    @Test
+    public void combineUsingConcatWithDelayTest() {
+        Flux<String> firstFlux = Flux.just("a", "b", "c").delayElements(Duration.ofSeconds(1));
+        Flux<String> secondFlux = Flux.just("d", "e", "f").delayElements(Duration.ofSeconds(1));
+
+        Flux<String> mergedFlux = Flux.concat(firstFlux, secondFlux);
+
+        StepVerifier.create(mergedFlux.log())
+                .expectSubscription()
+                .expectNext("a", "b", "c", "d", "e", "f")
+                .verifyComplete();
+
+
+    }
 }
