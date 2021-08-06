@@ -68,4 +68,19 @@ public class FluxAndMonoCombineTest {
 
 
     }
+
+    @Test
+    public void combineUsingZipTest() {
+        Flux<String> firstFlux = Flux.just("a", "b", "c");
+        Flux<String> secondFlux = Flux.just("d", "e", "f");
+
+        Flux<String> mergedFlux = Flux.zip(firstFlux, secondFlux, String::concat);
+
+        StepVerifier.create(mergedFlux.log())
+                .expectSubscription()
+                .expectNext("ad", "be", "cf")
+                .verifyComplete();
+
+
+    }
 }
