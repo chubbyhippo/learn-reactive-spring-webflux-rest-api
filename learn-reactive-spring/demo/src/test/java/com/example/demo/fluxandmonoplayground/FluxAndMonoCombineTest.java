@@ -38,4 +38,19 @@ public class FluxAndMonoCombineTest {
 
 
     }
+
+    @Test
+    public void combineUsingConcatTest() {
+        Flux<String> firstFlux = Flux.just("a", "b", "c");
+        Flux<String> secondFlux = Flux.just("d", "e", "f");
+
+        Flux<String> mergedFlux = Flux.concat(firstFlux, secondFlux);
+
+        StepVerifier.create(mergedFlux.log())
+                .expectSubscription()
+                .expectNext("a", "b", "c", "d", "e", "f")
+                .verifyComplete();
+
+
+    }
 }
