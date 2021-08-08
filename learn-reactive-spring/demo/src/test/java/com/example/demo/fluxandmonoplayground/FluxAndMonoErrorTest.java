@@ -7,7 +7,7 @@ import reactor.test.StepVerifier;
 public class FluxAndMonoErrorTest {
 
     @Test
-    public void fluxErrorHandlingTest() {
+    public void fluxErrorHandlingOnErrorResumeTest() {
 
         Flux<String> stringFlux = Flux.just("a", "b", "c")
                 .concatWith(Flux.error(new RuntimeException("Exception Occurred")))
