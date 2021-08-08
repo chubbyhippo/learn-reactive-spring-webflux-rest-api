@@ -28,4 +28,23 @@ public class FluxAndMonoErrorTest {
 
 
     }
+
+    @Test
+    public void fluxErrorHandlingOnErrorReturnTest() {
+
+        Flux<String> stringFlux = Flux.just("a", "b", "c")
+                .concatWith(Flux.error(new RuntimeException("Exception Occurred")))
+                .concatWith(Flux.just("d"))
+                .onErrorReturn("default");
+
+
+
+        StepVerifier.create(stringFlux.log())
+                .expectSubscription()
+                .expectNext("a", "b", "c")
+                .expectNext("default")
+                .verifyComplete();
+
+
+    }
 }
