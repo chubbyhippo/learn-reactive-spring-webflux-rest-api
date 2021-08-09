@@ -26,7 +26,6 @@ public class FluxAndMonoErrorTest {
                 .expectNext("default", "default1")
                 .verifyComplete();
 
-
     }
 
     @Test
@@ -37,14 +36,11 @@ public class FluxAndMonoErrorTest {
                 .concatWith(Flux.just("d"))
                 .onErrorReturn("default");
 
-
-
         StepVerifier.create(stringFlux.log())
                 .expectSubscription()
                 .expectNext("a", "b", "c")
                 .expectNext("default")
                 .verifyComplete();
-
 
     }
 }
