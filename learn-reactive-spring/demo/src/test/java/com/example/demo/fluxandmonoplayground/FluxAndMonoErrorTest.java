@@ -3,6 +3,9 @@ package com.example.demo.fluxandmonoplayground;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
 
 public class FluxAndMonoErrorTest {
 
@@ -88,6 +91,25 @@ public class FluxAndMonoErrorTest {
                 .expectNext("a", "b", "c")
                 .expectNext("a", "b", "c")
                 .expectError(CustomException.class)
+                .verify();
+
+    }
+
+    @Test
+    public void fluxErrorHandlingOnErrorMapWithRetryBackOffTest() {
+
+        Flux<String> stringFlux = Flux.just("a", "b", "c")
+                .concatWith(Flux.error(new RuntimeException("Exception Occurred")))
+                .concatWith(Flux.just("d"))
+                .onErrorMap(CustomException::new)
+                .retryWhen(Retry.backoff(2, Duration.ofSeconds(2)));
+
+        StepVerifier.create(stringFlux.log())
+                .expectSubscription()
+                .expectNext("a", "b", "c")
+                .expectNext("a", "b", "c")
+                .expectNext("a", "b", "c")
+                .expectError(IllegalStateException.class)
                 .verify();
 
     }
