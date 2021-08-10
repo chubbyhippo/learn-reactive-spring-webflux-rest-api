@@ -43,4 +43,33 @@ public class FluxAndMonoErrorTest {
                 .verifyComplete();
 
     }
+
+    @Test
+    public void fluxErrorHandlingOnErrorMapTest() {
+
+        Flux<String> stringFlux = Flux.just("a", "b", "c")
+                .concatWith(Flux.error(new RuntimeException("Exception Occurred")))
+                .concatWith(Flux.just("d"))
+                .onErrorMap(CustomException::new);
+
+        StepVerifier.create(stringFlux.log())
+                .expectSubscription()
+                .expectNext("a", "b", "c")
+                .expectError(CustomException.class)
+                .verify();
+
+    }
+
+    private static class CustomException extends Throwable {
+        private final String message;
+
+        @Override
+        public String getMessage() {
+            return message;
+        }
+
+        public CustomException(Throwable throwable) {
+            this.message = throwable.getMessage();
+        }
+    }
 }
