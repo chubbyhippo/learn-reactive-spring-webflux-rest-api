@@ -57,6 +57,39 @@ public class FluxAndMonoBackPressureTest {
             }
         });
 
+    }
 
+    @Test
+    public void backPressureCancel() {
+        Flux<Integer> integerFlux = Flux.range(1, 10)
+                .log();
+
+//        integerFlux.subscribe(integer -> System.out.println("Element is : " + integer)
+//                , throwable -> System.out.println("Exception is : " + throwable)
+//                , () -> System.out.println("Done")
+//                , Subscription::cancel);
+
+        integerFlux.subscribe(new Subscriber<>() {
+
+            @Override
+            public void onSubscribe(Subscription s) {
+                s.cancel();
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                System.out.println("Element is : " + integer);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.println("Exception is : " + t);
+            }
+
+            @Override
+            public void onComplete() {
+                System.out.println("Done");
+            }
+        });
     }
 }
