@@ -3,7 +3,6 @@ package com.example.demo.fluxandmonoplayground;
 import org.junit.jupiter.api.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
@@ -89,6 +88,23 @@ public class FluxAndMonoBackPressureTest {
             @Override
             public void onComplete() {
                 System.out.println("Done");
+            }
+        });
+    }
+
+    @Test
+    public void customizedBackPressure() {
+        Flux<Integer> integerFlux = Flux.range(1, 10)
+                .log();
+
+        integerFlux.subscribe(new BaseSubscriber<Integer>() {
+            @Override
+            protected void hookOnNext(Integer value) {
+                request(1);
+                System.out.println("Value received is : " + value);
+                if (value == 4) {
+                    cancel();
+                }
             }
         });
     }
