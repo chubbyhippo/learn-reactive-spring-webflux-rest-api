@@ -97,7 +97,7 @@ public class FluxAndMonoBackPressureTest {
         Flux<Integer> integerFlux = Flux.range(1, 10)
                 .log();
 
-        integerFlux.subscribe(new BaseSubscriber<Integer>() {
+        integerFlux.subscribe(new BaseSubscriber<>() {
             @Override
             protected void hookOnNext(Integer value) {
                 request(1);
