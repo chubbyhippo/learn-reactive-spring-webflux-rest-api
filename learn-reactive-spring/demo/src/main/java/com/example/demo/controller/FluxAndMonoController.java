@@ -16,8 +16,8 @@ public class FluxAndMonoController {
     }
 
     @GetMapping(value = "/fluxstream", produces = MediaType.APPLICATION_NDJSON_VALUE)
-    public Flux<Integer> returnFluxStream() {
-        return Flux.just(1, 2, 3, 4)
+    public Flux<Long> returnFluxStream() {
+        return Flux.interval(Duration.ofSeconds(1))
                 .delayElements(Duration.ofSeconds(1)).log();
     }
 }
