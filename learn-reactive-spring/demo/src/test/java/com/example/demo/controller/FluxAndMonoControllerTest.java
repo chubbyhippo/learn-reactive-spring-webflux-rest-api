@@ -13,7 +13,7 @@ import reactor.test.StepVerifier;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 @WebFluxTest
 class FluxAndMonoControllerTest {
@@ -29,13 +29,12 @@ class FluxAndMonoControllerTest {
                 .expectStatus()
                 .isOk()
                 .returnResult(Integer.class)
-                .getResponseBody()
-                ;
+                .getResponseBody();
 
         StepVerifier.create(responseBody)
                 .expectSubscription()
                 .expectNext(1)
-                .expectNext(2,3,4)
+                .expectNext(2, 3, 4)
                 .verifyComplete();
     }
 
@@ -64,7 +63,23 @@ class FluxAndMonoControllerTest {
                 .expectBodyList(Integer.class)
                 .returnResult();
 
-        Assertions.assertThat(expectedIntegerList).isEqualTo(listEntityExchangeResult.getResponseBody());
+        assertThat(expectedIntegerList).isEqualTo(listEntityExchangeResult.getResponseBody());
+    }
+
+    @Test
+    public void fluxConsumeWithTest() {
+
+        List<Integer> expectedIntegerList = Arrays.asList(1, 2, 3, 4);
+
+        webTestClient.get().uri("/flux")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(Integer.class)
+                .consumeWith(listEntityExchangeResult -> {
+                    assertThat(expectedIntegerList).isEqualTo(listEntityExchangeResult.getResponseBody());
+                });
     }
 
 }
