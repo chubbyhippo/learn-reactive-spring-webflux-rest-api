@@ -24,6 +24,6 @@ public class FluxAndMonoController {
 
     @GetMapping("/mono")
     public Mono<Integer> returnMono() {
-        return Mono.just(1);
+        return Mono.just(1).log();
     }
 }
