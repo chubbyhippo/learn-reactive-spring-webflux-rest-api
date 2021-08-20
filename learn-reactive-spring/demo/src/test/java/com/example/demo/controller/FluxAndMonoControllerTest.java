@@ -101,4 +101,17 @@ class FluxAndMonoControllerTest {
 
     }
 
+    @Test
+    public void monoTest() {
+        Integer expectedValue = 1;
+
+        webTestClient.get().uri("/mono")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Integer.class)
+                .consumeWith(integerEntityExchangeResult -> assertThat(expectedValue)
+                        .isEqualTo(integerEntityExchangeResult.getResponseBody()));
+    }
+
 }
