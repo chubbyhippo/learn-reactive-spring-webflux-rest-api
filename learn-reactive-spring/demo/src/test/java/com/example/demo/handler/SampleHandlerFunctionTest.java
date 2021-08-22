@@ -10,6 +10,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -35,5 +36,16 @@ class SampleHandlerFunctionTest {
                 .expectNext(2, 3, 4)
                 .verifyComplete();
     }
+    @Test
+    public void monoTest() {
+        Integer expectedValue = 1;
 
+        webTestClient.get().uri("/functional/mono")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Integer.class)
+                .consumeWith(integerEntityExchangeResult -> assertThat(expectedValue)
+                        .isEqualTo(integerEntityExchangeResult.getResponseBody()));
+    }
 }
