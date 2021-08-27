@@ -1,7 +1,6 @@
 package com.example.demo.repository;
 
 import com.example.demo.document.Item;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,6 @@ import reactor.test.StepVerifier;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @DataMongoTest
 class ItemReactiveRepositoryTest {
 
@@ -23,7 +20,7 @@ class ItemReactiveRepositoryTest {
     List<Item> items = Arrays.asList(new Item(null, "Samsung Monitor", 800.0),
             new Item(null, "LG Monitor", 420.0),
             new Item(null, "Acer Monitor", 1420.99),
-            new Item(null, "Dell Monitor", 1500.0));
+            new Item("abc", "Dell Monitor", 1500.0));
 
 
     @BeforeEach
@@ -40,6 +37,14 @@ class ItemReactiveRepositoryTest {
         StepVerifier.create(itemReactiveRepository.findAll())
                 .expectSubscription()
                 .expectNextCount(4)
+                .verifyComplete();
+    }
+
+    @Test
+    public void getItemByIdTest() {
+        StepVerifier.create(itemReactiveRepository.findById("abc"))
+                .expectSubscription()
+                .expectNextMatches(item -> item.getDescription().equals("Dell Monitor"))
                 .verifyComplete();
     }
 }
