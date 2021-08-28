@@ -55,4 +55,12 @@ class ItemReactiveRepositoryTest {
                 .expectNextCount(1)
                 .verifyComplete();
     }
+
+    @Test
+    public void findItemByDescriptionContainsTest() {
+        StepVerifier.create(itemReactiveRepository.findByDescriptionContains("Del")
+                        .log("findItemByDescriptionContains : "))
+                .expectNextCount(1)
+                .verifyComplete();
+    }
 }
