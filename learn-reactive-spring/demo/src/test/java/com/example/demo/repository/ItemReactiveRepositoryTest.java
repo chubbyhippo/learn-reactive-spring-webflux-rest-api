@@ -47,4 +47,12 @@ class ItemReactiveRepositoryTest {
                 .expectNextMatches(item -> item.getDescription().equals("Dell Monitor"))
                 .verifyComplete();
     }
+
+    @Test
+    public void findItemByDescriptionTest() {
+        StepVerifier.create(itemReactiveRepository.findByDescription("Dell Monitor")
+                        .log("findItemByDescription : "))
+                .expectNextCount(1)
+                .verifyComplete();
+    }
 }
