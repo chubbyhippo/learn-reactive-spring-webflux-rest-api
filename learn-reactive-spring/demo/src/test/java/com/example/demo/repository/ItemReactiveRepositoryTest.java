@@ -63,4 +63,13 @@ class ItemReactiveRepositoryTest {
                 .expectNextCount(1)
                 .verifyComplete();
     }
+
+    @Test
+    public void saveItemTest() {
+        var item = new Item("def", "Lenovo Monitor", 3000.0);
+        var savedItem = itemReactiveRepository.save(item);
+        StepVerifier.create(savedItem)
+                .expectNextMatches(item1 -> item1.getDescription().equals("Lenovo Monitor"))
+                .verifyComplete();
+    }
 }
