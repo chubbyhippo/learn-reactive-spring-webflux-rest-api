@@ -65,6 +65,14 @@ class ItemReactiveRepositoryTest {
     }
 
     @Test
+    public void findItemByDescriptionStartWithTest() {
+        StepVerifier.create(itemReactiveRepository.findByDescriptionEndingWith("tor"))
+                .expectNextCount(4)
+                .verifyComplete();
+
+    }
+
+    @Test
     public void saveItemTest() {
         var item = new Item("def", "Lenovo Monitor", 3000.0);
         var savedItem = itemReactiveRepository.save(item);

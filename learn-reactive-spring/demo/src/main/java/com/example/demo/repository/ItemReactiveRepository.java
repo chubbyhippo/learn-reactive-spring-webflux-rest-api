@@ -8,4 +8,6 @@ public interface ItemReactiveRepository extends ReactiveMongoRepository<Item, St
     Flux<Item> findByDescription(String description);
 
     Flux<Item> findByDescriptionContains(String description);
+
+    Flux<Item> findByDescriptionEndingWith(String description);
 }
