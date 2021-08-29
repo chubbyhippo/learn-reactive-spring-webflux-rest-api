@@ -98,12 +98,24 @@ class ItemReactiveRepositoryTest {
     }
 
     @Test
-    public void deleteItemById() {
+    public void deleteItemByIdTest() {
         Mono<Void> deletedItem = itemReactiveRepository.findById("abc")
                 .map(Item::getId)
                 .flatMap(id -> itemReactiveRepository.deleteById(id));
 
-        deletedItem.log("deleted item :").subscribe();
+        StepVerifier.create(deletedItem).verifyComplete();
+
+        StepVerifier.create(itemReactiveRepository.findAll())
+                .expectNextCount(3)
+                .verifyComplete();
+    }
+
+    @Test
+    public void deleteItemByItemTest() {
+        Mono<Void> deletedItem = itemReactiveRepository.findByDescription("Dell Monitor")
+                .flatMap(item -> itemReactiveRepository.delete(item));
+
+        StepVerifier.create(deletedItem).verifyComplete();
 
         StepVerifier.create(itemReactiveRepository.findAll())
                 .expectNextCount(3)
