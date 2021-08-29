@@ -80,4 +80,19 @@ class ItemReactiveRepositoryTest {
                 .expectNextMatches(item1 -> item1.getDescription().equals("Lenovo Monitor"))
                 .verifyComplete();
     }
+
+    @Test
+    public void updateItemTest() {
+        var newPrice = 520.00;
+        Flux<Item> updatedItem = itemReactiveRepository.findByDescription("Dell Monitor")
+                .map(item -> {
+                    item.setPrice(newPrice);
+                    return item;
+                })
+                .flatMap(item -> itemReactiveRepository.save(item));
+
+        StepVerifier.create(updatedItem)
+                .expectNextMatches(item -> item.getPrice() == 520.0)
+                .verifyComplete();
+    }
 }
