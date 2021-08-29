@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
@@ -84,7 +85,7 @@ class ItemReactiveRepositoryTest {
     @Test
     public void updateItemTest() {
         var newPrice = 520.00;
-        Flux<Item> updatedItem = itemReactiveRepository.findByDescription("Dell Monitor")
+        Mono<Item> updatedItem = itemReactiveRepository.findByDescription("Dell Monitor")
                 .map(item -> {
                     item.setPrice(newPrice);
                     return item;
@@ -93,6 +94,19 @@ class ItemReactiveRepositoryTest {
 
         StepVerifier.create(updatedItem)
                 .expectNextMatches(item -> item.getPrice() == 520.0)
+                .verifyComplete();
+    }
+
+    @Test
+    public void deleteItemById() {
+        Mono<Void> deletedItem = itemReactiveRepository.findById("abc")
+                .map(Item::getId)
+                .flatMap(id -> itemReactiveRepository.deleteById(id));
+
+        deletedItem.log("deleted item :").subscribe();
+
+        StepVerifier.create(itemReactiveRepository.findAll())
+                .expectNextCount(3)
                 .verifyComplete();
     }
 }
