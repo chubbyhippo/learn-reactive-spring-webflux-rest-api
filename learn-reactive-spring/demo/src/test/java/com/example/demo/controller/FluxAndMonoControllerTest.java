@@ -80,9 +80,8 @@ class FluxAndMonoControllerTest {
                 .expectStatus()
                 .isOk()
                 .expectBodyList(Integer.class)
-                .consumeWith(listEntityExchangeResult -> {
-                    assertThat(expectedIntegerList).isEqualTo(listEntityExchangeResult.getResponseBody());
-                });
+                .consumeWith(listEntityExchangeResult ->
+                        assertThat(expectedIntegerList).isEqualTo(listEntityExchangeResult.getResponseBody()));
     }
 
     @Test
