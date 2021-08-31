@@ -15,7 +15,7 @@ import static com.example.demo.constants.ItemConstants.ITEM_END_POINT_V1;
 @Slf4j
 @RequiredArgsConstructor
 public class ItemController {
-    private ItemReactiveRepository itemReactiveRepository;
+    private final ItemReactiveRepository itemReactiveRepository;
 
     @GetMapping(ITEM_END_POINT_V1)
     public Flux<Item> getAllItems() {
