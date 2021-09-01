@@ -46,7 +46,7 @@ class ItemControllerTest {
     }
 
     @Test
-    public void getAllItems() {
+    public void getAllItemsHasSizeTest() {
         webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1)
                 .exchange()
                 .expectStatus().isOk()
