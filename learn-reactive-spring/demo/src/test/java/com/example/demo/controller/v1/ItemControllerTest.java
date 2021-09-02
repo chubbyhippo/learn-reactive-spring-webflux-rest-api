@@ -3,7 +3,6 @@ package com.example.demo.controller.v1;
 import com.example.demo.constants.ItemConstants;
 import com.example.demo.document.Item;
 import com.example.demo.repository.ItemReactiveRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,8 @@ import reactor.core.publisher.Flux;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureWebTestClient
@@ -66,7 +67,7 @@ class ItemControllerTest {
                 .hasSize(4).consumeWith(listEntityExchangeResult -> {
                     List<Item> responseBody = listEntityExchangeResult.getResponseBody();
                     assert responseBody != null;
-                    responseBody.forEach(item -> Assertions.assertThat(item.getId()).isNotNull());
+                    responseBody.forEach(item -> assertThat(item.getId()).isNotNull());
                 });
     }
 
