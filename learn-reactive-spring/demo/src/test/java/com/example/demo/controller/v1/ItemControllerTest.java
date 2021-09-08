@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +70,21 @@ class ItemControllerTest {
                     assert responseBody != null;
                     responseBody.forEach(item -> assertThat(item.getId()).isNotNull());
                 });
+    }
+
+    @Test
+    public void getAllItemsHasSizeWithStepVerifierTest() {
+        Flux<Item> responseBody = webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .returnResult(Item.class)
+                .getResponseBody();
+
+        StepVerifier.create(responseBody.log("value from network"))
+                .expectNextCount(4)
+                .verifyComplete();
+
     }
 
 }
