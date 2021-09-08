@@ -81,7 +81,7 @@ class ItemControllerTest {
                 .returnResult(Item.class)
                 .getResponseBody();
 
-        StepVerifier.create(responseBody.log("value from network"))
+        StepVerifier.create(responseBody.log("value from network : "))
                 .expectNextCount(4)
                 .verifyComplete();
 
