@@ -96,6 +96,12 @@ class ItemControllerTest {
                 .jsonPath("$.price", 1500.0);
     }
 
+    @Test
+    public void getOneItemNotFoundTest() {
+        webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"), "abcefg")
+                .exchange()
+                .expectStatus().isNotFound();
+    }
 
 
 }
