@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
@@ -101,6 +102,21 @@ class ItemControllerTest {
         webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"), "abcefg")
                 .exchange()
                 .expectStatus().isNotFound();
+    }
+
+    @Test
+    public void createItemTest() {
+        Item item = new Item(null, "Ipad", 1000.99);
+        webTestClient.post().uri(ItemConstants.ITEM_END_POINT_V1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(item), Item.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.id").isNotEmpty()
+                .jsonPath("$.description").isEqualTo("Ipad")
+                .jsonPath("$.price").isEqualTo(1000.99);
+
     }
 
 
