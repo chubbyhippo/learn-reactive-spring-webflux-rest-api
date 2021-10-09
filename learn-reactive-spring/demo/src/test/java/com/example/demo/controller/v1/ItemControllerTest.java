@@ -133,5 +133,20 @@ class ItemControllerTest {
 
     }
 
+    @Test
+    public void updateItemTest() {
+        double newPrice = 9999.99;
+        Item item = new Item(null, "Dell Monitor", newPrice);
+
+        webTestClient.put().uri(ITEM_END_POINT_V1.concat("/{id}"), "abc")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(item), Item.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.price").isEqualTo(newPrice);
+    }
+
 
 }
